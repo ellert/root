@@ -114,6 +114,11 @@ ROOT_LINKER_LIBRARY(Cling
         $<TARGET_OBJECTS:MetaCling>
         LIBRARIES ${CLING_LIBRARIES} ${LINK_LIBS} ${CLING_PLUGIN_LINK_LIBS})
 
+# The dependency on rootcling_stage1 was added to prevent Cling (libCling) and
+# rootcling_stage1 from being linked in parallel.
+# This avoids doing two memory consuming operations in parallel.
+add_dependencies(Cling rootcling_stage1)
+
 if(MSVC)
   set_target_properties(Cling PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
   set(cling_exports
